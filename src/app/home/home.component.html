@@ -1,0 +1,66 @@
+﻿<div class="card mt-4">
+  <div class="card-body">
+    <div class="row">
+      <div class="col-4">
+        <p>Your role is: <strong>{{currentUser.role}}</strong>.</p>
+      </div>
+      <div class="col-6">
+        <div *ngIf="loading" class="spinner-border spinner-border-sm"></div>
+      </div>
+      <div class="col-2">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal"
+          *ngIf="currentUser.role == 'Admin'">
+          Add Product
+        </button>
+      </div>
+    </div>
+
+    <form [formGroup]="myForm" *ngIf="currentUser.role == 'User'">
+      <h6>Filter by Price</h6>
+      <select name="Price" formControlName="filterProduct">
+        <option *ngFor="let k of PriceFilter; let i = index;" [ngValue]="getValue(i)">
+          {{ getValue(i).displayText }}
+        </option>
+      </select>
+    </form>
+  </div>
+</div>
+<br>
+<div class="card-deck">
+  <div class="card" *ngFor="let p of filteredProducts;let i=index;">
+    <img src="{{p.img}}" class="card-img-top" alt="...">
+    <div class="card-body">
+      <h5 class="card-title">Name: {{p.name}}</h5>
+      <h6 class="card-title">Price: {{p.price}}</h6>
+      <p class="card-text">Category: {{p.category}}</p>
+      <hr>
+      <p class="card-text"><small class="text-muted">{{p.rating}} star</small></p>
+      <button type="button" class="btn btn-danger" *ngIf="currentUser.role == 'Admin'"
+        (click)="delete(i)">Delete</button>
+      <button type="button" class="btn btn-info mx-4" *ngIf="currentUser.role == 'Admin'">Update</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div>
+          <form [formGroup]="myForm1" (ngSubmit)="addValue()">
+            <input type="text" id="img" formControlName="img" placeholder="Enter Image URL">
+            <input type="text" id="name" formControlName="name" placeholder="Enter Product Name">
+            <input type="text" id="price" formControlName="price" placeholder="Enter Product Price">
+            <input type="text" id="category" formControlName="category" placeholder="Enter Product Category">
+          </form>
+
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" (click)="onSubmit()">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
